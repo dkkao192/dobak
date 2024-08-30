@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!--모달 팝업-->
+<div class="modal">
+    <div class="modal_popup">
+        <h3 id = 'one'>오류!</h3>
+        <p id = 'two'>돈이 부족합니다</p>
+        <button type="button" class="close_btn">닫기</button>
+    </div>
+</div>
+
+<div class="modal2">
+    <div class="modal2_popup">
+        <h3>[상점]</h3>
+        <p>아귀의 손 100000$</p>
+        <button class ="b1">구매하기</button>
+        <p>짝귀의 귀 300000$</p>
+        <button class ="b2">구매하기</button>
+        <p>전설의 화투 5000000$</p>
+        <button class= 'b3'>구매하기</button>
+        <button type="button" class="close2_btn">닫기</button>
+    </div>
+</div>
+<div class="modal3">
+    <div class="modal3_popup">
+        <h3 id = "one3">[비밀번호 입력]</h3>
+        <input type="text" id="command">
+        <button type="button" class="close3_btn">닫기</button>
+    </div>
+</div>
+<!--end 모달 팝업-->
+   <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[게임]</title>
+</head>
+<body>
+    <main>
+        <section>
+            <p id = 'items'>아이템 목록: 없음</p><br>
+            <p id = 'nowMoney' >현재 소유금: 1000$</p>
+            <input type="number" id = 'money' placeholder="베팅금을 입력하세요">
+            <p id = 'multiple'>x2</p>
+            <p id = 'rate'>성공 확률: 50%</p>
+            <input value="시작" onclick="start()" type="button" id = '타이머' class="modal_btn">
+            <input value="상점" onclick="modal2.classList.add('on')" type="button" class="modal2_btn">
+        </section>
+    </main>
+    <!-- <button style=" position : absolute; top : -40px; left : 0px;" onclick="go()">주식창으로 가기</button>  -->
+    </body>
+</html>
+<script>
+var a = 0;
+var texts
+var items = []
+
+setInterval(function() {
+    if( document.getElementById('nowMoney').innerText.replace('현재 소유금: ','').replace('$','') <= 0 && a == 0) {
+        a = 1
+        modal.classList.remove("on")
+        modal2.classList.remove("on")
+        setTimeout(() => {
+            SetModal("파산","게임을 다시 시작합니다.")
+            modal.classList.add("on")
+            document.getElementById('nowMoney').innerText = '현재 소유금: ' + 1000 + '$'
+            document.getElementById('items').innerText = "아이템 목록: 없음"
+            document.getElementById('multiple').innerText = "x2"
+            document.getElementById('rate').innerText = "성공 확률: 50%"
+            document.getElementById('타이머').value = '시작'
+            a = 0
+        }, 20)
+    }
+    if(document.getElementById('타이머').value.includes('준비중')) {
+        document.getElementById('타이머').value = `준비중... ${document.getElementById('타이머').value.replace('준비중... ','') - 1}`     
+    }
+    if(    document.getElementById('타이머').value == ('준비중... 0')) {
+        document.getElementById('타이머').value = '시작'
+    }
+    localStorage.setItem('money',document.getElementById('nowMoney').innerText.replace('현재 소유금: ','').replace('$',''))
+    localStorage.setItem('multiple',document.getElementById('multiple').innerText)
+    localStorage.setItem('rate',document.getElementById('rate').innerText)
+    localStorage.setItem('items',document.getElementById('items').innerText)
+}, 1000)
+
+const modalClose = document.querySelector('.close_btn');
+    const modal3 = document.querySelector('.modal3');
+    const modal2 = document.querySelector('.modal2');
+    const modal = document.querySelector('.modal');
+    const b1 = document.querySelector('.b1');
+    const b2 = document.querySelector('.b2');
+    const b3 = document.querySelector('.b3');
+    //닫기 버튼을 눌렀을 때 모달팝업이 닫힘
+modalClose.addEventListener('click',function(){
+    //'on' class 제거
+    modal.classList.remove('on');
+});
+
+const modalClose2 = document.querySelector('.close2_btn');
+const modalClose3 = document.querySelector('.close3_btn');
+
+window.addEventListener('keydown', function(event) {
+  if (event.key == "Enter") {
+    modal3.classList.add('on')
+  }
+});
+
+//닫기 버튼을 눌렀을 때 모달팝업이 닫힘
+modalClose2.addEventListener('click',function(){
+    //'on' class 제거
+    modal2.classList.remove('on');
+});
+
+var on = false
+
+modalClose3.addEventListener('click',function(){
+    const text = document.getElementById('command').value
+    document.getElementById('command').value = ''
+    if(text == "qudtlsalstj" && on == false) {
+        on = true
+        SetModal3("명령어를 입력하세요")
+        SetModal("개발자모드","개발자모드 오픈")
+        modal.classList.add("on")
+    }
+    else if(on) {
+        if(text.startsWith('give money')) {
+            document.getElementById('nowMoney').innerText = "현재 소유금: " + (Number(document.getElementById('nowMoney').innerText.replace("현재 소유금: ","").replace('$',"")) + Number(text.replace("give money ",""))) + "$"
+            SetModal("명령어","실행 완료!")
+            modal.classList.add('on')
+        }
+        else if(text == 'rock') {
+            on = false
+            SetModal3("[비밀번호를 입력하세요]")
+            SetModal("명령어","실행 완료!")
+            modal.classList.add("on")
+        }
+        else if(text == 'reload') {
+            SetModal("명령어","실행 완료!")
+    modal.classList.add("on")
+    document.getElementById('nowMoney').innerText = '현재 소유금: ' + 1000 + '$'
+    document.getElementById('items').innerText = "아이템 목록: 없음"
+    document.getElementById('multiple').innerText = "x2"
+    document.getElementById('rate').innerText = "성공 확률: 50%"
+    document.getElementById('타이머').value = '시작'
+        }
+        else{
+            SetModal("오류","해당 명령어는 올바르지 않습니다.")
+        }
+    }
+    else{
+        SetModal("오류","비밀번호가 틀렸습니다.")
+        modal.classList.add('on')
+    }
+    modal3.classList.remove('on');
+});
+    function SetModal(text , text2) {
+        document.getElementById('one').innerText = text
+        document.getElementById('two').innerText = text2
+    }
+    function SetModal3(text , text2) {
+        document.getElementById('one3').innerText = text
+    }
+b1.addEventListener('click',function(){
+    if(document.getElementById('items').innerText.includes('아귀의 손')) {
+        SetModal('오류!','이미 구매했습니다.')
+        modal.classList.add('on')
+        modal2.classList.remove('on')
+    }else if(Number(document.getElementById('nowMoney').innerText.replace("현재 소유금: ","").replace("$","")) >= 100000) {
+    modal2.classList.remove('on')
+    SetModal("구매 완료!","아귀의 손을 구매했습니다.\n효과: 성공 확률 +10%")
+    modal.classList.add('on')
+    items.push(' 아귀의 손 ')
+    document.getElementById('items').innerText = `아이템 목록: ${items}`
+    document.getElementById('nowMoney').innerHTML = '현재 소유금: ' + (Math.floor(document.getElementById('nowMoney').innerText.replace("현재 소유금: ","").replace("$","")) - 100000) + '$'
+    }else{
+        SetModal('오류!','돈이 부족합니다')
+        modal2.classList.remove('on');
+        modal.classList.add('on');
+    }
+})
+
+b2.addEventListener('click',function(){
+    if(document.getElementById('items').innerText.includes('짝귀의 귀')) {
+        SetModal('오류!','이미 구매했습니다.')
+        modal.classList.add('on')
+        modal2.classList.remove('on')
+    }else if(Number(document.getElementById('nowMoney').innerText.replace("현재 소유금: ","").replace("$","")) >= 300000) {
+    modal2.classList.remove('on')
+    SetModal("구매 완료!","짝귀의 귀를 구매했습니다.\n효과: 성공 확률 +15%")
+    modal.classList.add('on')
+    items.push(' 짝귀의 귀 ')
+    document.getElementById('items').innerText = `아이템 목록: ${items}`
+    document.getElementById('nowMoney').innerHTML = '현재 소유금: ' + (Math.floor(document.getElementById('nowMoney').innerText.replace("현재 소유금: ","").replace("$","")) - 300000) + '$'
+    }else{
+        SetModal('오류!','돈이 부족합니다')
+        modal2.classList.remove('on');
+        modal.classList.add('on');
+    }
+})
+
+b3.addEventListener('click',function(){
+    if(document.getElementById('items').innerText.includes('전설의 화투')) {
+        SetModal('오류!','이미 구매했습니다.')
+        modal.classList.add('on')
+        modal2.classList.remove('on')
+    }else if(Number(document.getElementById('nowMoney').innerText.replace("현재 소유금: ","").replace("$","")) >= 5000000) {
+    modal2.classList.remove('on')
+    SetModal("구매 완료!","전설의 화투를 구매했습니다.\n효과: 밑장빼기 방지")
+    modal.classList.add('on')
+    items.push(' 전설의 화투 ')
+    document.getElementById('items').innerText = `아이템 목록: ${items}`
+    document.getElementById('nowMoney').innerHTML = '현재 소유금: ' + (Math.floor(document.getElementById('nowMoney').innerText.replace("현재 소유금: ","").replace("$","")) - 50000000) + '$'
+    }else{
+        SetModal('오류!','돈이 부족합니다')
+        modal2.classList.remove('on');
+        modal.classList.add('on');
+    }
+})
+
+window.addEventListener('click', function(object) {
+    alert(object)
+    alert(object == 
+})
+
+// Texts 변수
+var TimerText = document.getElementById('타이머').value;
+var MoneyText = document.getElementById('nowMoney').innerHTML;
+var InputMoneyText = document.getElementById('money').value;
+var RateText = document.getElementById('rate').innerHTML;
+var MultipleText = document.getElementById('multiple').innerHTML;
+var ItemsText = document.getElementById('items').innerText;
+
+// Items 변수
+var HasItem1 = items.includes("아귀의 손") ? 10 : 0
+var HasItem2 = items.includes("짝귀의 귀") ? 15 : 0
+
+// 기타 변수
+var Rate = document.getElementById('rate').innerHTML.replace("성공 확률: ","").replace("%","");
+var Multiple = document.getElementById('multiple').innerHTML.replace("x","");
+var Money = document.getElementById('nowMoney').innerText.replace("현재 소유금: ","").replace("$","");
+var OtH = Math.random() * 100
+
+// Plus 변수
+var RatePlus = Math.floor(Math.random() * 40)-20;
+var MultiplePlus = ( ( Math.random() * 1 ).toFixed(1) - ( Math.random() * 1 ).toFixed(1) ).toFixed(1);
+
+
+function start() {
+    if( TimerText === '시작' ) {
+        InputMoneyText = '';
+        if( Number(InputMoneyText) > 0 ) {
+            if( Number(Money) >= Number(InputMoneyText) ) {
+                TimerText = '준비중... 10'; 
+                if( OtH <= ( Number(Rate) + Number(HasItem1) + Number(HasItem2) ) ) {
+                    SetModal('승리!',`번 돈: ${Number(InputMoneyText) * Number(Multiple)}$`);
+                    modal.classList.add('on');
+                    MoneyText = '현재 소유금: ' + ( Number(Money) + ( Number(InputMoneyText) * Number(Multiple) ) ) + '$';
+                }else{
+                    MoneyText = '현재 소유금: ' + ( Number(Money) - Number(InputMoneyText) ) + '$';
+                    SetModal('패배!',`잃은 돈: ${InputMoneyText}$`);
+                    modal.classList.add('on');
+                }
+                    RateText = '성공 확률: ' + ( Number(Rate) + Number(RatePlus) ) + '%';
+                    MultipleText = 'x' + ( Number(Rate) + Number(MultiplePlus) );
+            }else{
+                SetModal('오류!','돈이 부족합니다')
+                modal.classList.add('on');
+            }
+        }else{
+            SetModal('오류!','베팅금은 음수로 작성할 수 없습니다')
+            modal.classList.add('on');
+        }
+    }
+    RateText = '성공 확률: ' + ( Number( Math.abs(Rate) ) ) + '%'
+    MultipleText = 'x' + ( Number( Math.abs(Multiple) ) ).toFixed(1)
+    if(Number(Rate) >= 100) {
+        RateText = '성공 확률: 90%'
+    }
+}
+
+MoneyText = `현재 소유금: ${localStorage.getItem("money") ?? 1000}$`
+ItemsText = localStorage.getItem("items") ?? "아이템 목록: 없음"
+MultipleText = localStorage.getItem("multiple") ?? "x2"
+RateText = localStorage.getItem("rate") ?? "성공 확률: 50%"
+
+</script>
+<style>
+    h2{
+    text-align: center;
+}
+.modal_btn {
+    display: block;
+    margin: 40px auto;
+    padding: 10px 20px;
+    background-color: royalblue;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+.modal_btn:hover {
+    box-shadow: 3px 4px 11px 0px #00000040;
+}
+
+button {
+    display: block;
+    margin: 40px auto;
+    padding: 10px 20px;
+    background-color: rgb(174, 225, 65);
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+button:hover {
+    box-shadow: 3px 4px 11px 0px #00000040;
+}
+
+.modal2_btn {
+    display: block;
+    margin: 40px auto;
+    padding: 10px 20px;
+    background-color: rgb(212, 225, 65);
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+.modal2_btn:hover {
+    box-shadow: 3px 4px 11px 0px #00000040;
+}
+
+.modal.on {
+    display: block;
+}
+/*모달 팝업 영역 스타일링*/
+.modal {
+/*팝업 배경*/
+	display: none; /*평소에는 보이지 않도록*/
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: rgba(0,0,0,0.5);
+}
+.modal .modal_popup {
+/*팝업*/
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 20px;
+}
+.modal .modal_popup .close_btn {
+    display: block;
+    padding: 10px 20px;
+    background-color: rgb(116, 0, 0);
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+    input {
+  width: 500px;
+  height: 64px;
+  font-size: 15px;
+  border: 0;
+  border-radius: 5px;
+  outline: none;
+  padding-left: 10px;
+  font-size: 30px;
+  background-color: rgb(233, 233, 233);
+}
+*{
+    font-size: 30px;
+    font-family: "Black Han Sans", sans-serif;
+    font-weight: 400;
+     font-style: normal;
+    text-align: center; /* 가운데 정렬 */
+}
+.modal2.on {
+    display: block;
+}
+/*모달 팝업 영역 스타일링*/
+.modal2 {
+/*팝업 배경*/
+	display: none; /*평소에는 보이지 않도록*/
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: rgba(0,0,0,0.5);
+}
+.modal2 .modal2_popup {
+/*팝업*/
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 20px;
+}
+.modal2 .modal2_popup .close2_btn {
+    display: block;
+    padding: 10px 20px;
+    background-color: rgb(116, 0, 0);
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+
+.modal3.on {
+    display: block;
+}
+/*모달 팝업 영역 스타일링*/
+.modal3 {
+/*팝업 배경*/
+	display: none; /*평소에는 보이지 않도록*/
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: rgba(0,0,0,0.5);
+}
+.modal3 .modal3_popup {
+/*팝업*/
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 20px;
+}
+.modal3 .modal3_popup .close3_btn {
+    display: block;
+    padding: 10px 20px;
+    background-color: rgb(116, 0, 0);
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+</style>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap')
+</style>
